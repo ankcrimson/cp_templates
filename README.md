@@ -1,2 +1,6 @@
 # cp_templates
-templates for competitive programming
+Creating a repo for java templates for competitive programming
+
+#### Current Items:
+- QuickSearch
+- 
