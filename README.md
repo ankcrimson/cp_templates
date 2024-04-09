@@ -1,2 +1,2 @@
 # cp_templates
-templates for comptetitive programming
+templates for competitive programming
