@@ -88,7 +88,7 @@ int getMinCharLargestIndex(char[] arr, int start, int end){
     }
 ```
 
-#### Approach3: Greedy2 Monotinic Stack:
+#### Approach3: Greedy2 Monotonic Stack:
 
 ```java
 class Solution {
