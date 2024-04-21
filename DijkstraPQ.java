@@ -52,3 +52,41 @@ public class DijkstraPQ {
 
     }
 }
+/*
+
+int dijkstra(int n, Set<Integer>[] adj,int start, int end){
+        // System.out.println(start+","+end);
+        boolean[] visited = new boolean[n];
+        int[] costs = new int[n];
+        Arrays.fill(costs,-1);
+        PriorityQueue<int[]> pq = new PriorityQueue<>(Comparator.comparing(a -> a[1]));
+        pq.offer(new int[]{start,0});
+        while(!pq.isEmpty()){
+            int[] curr = pq.poll();
+            int v = curr[0];
+            int curr_cost = curr[1];
+            if(costs[v]==-1||curr_cost<costs[v]){
+                costs[v]=curr_cost;
+            }
+            visited[v]=true;
+            for(int edge:adj[v]){
+                if(!visited[edge]){
+                    pq.offer(new int[]{edge,costs[v]+1});
+                }
+            }
+        }
+        return costs[end];
+    }
+    public boolean validPath(int n, int[][] edges, int source, int destination) {
+        Set<Integer>[] adj = new Set[n];
+        for(int i=0;i<adj.length;i++){
+            adj[i]=new HashSet<>();
+        }
+        for(int i=0;i<edges.length;i++){
+            adj[edges[i][0]].add(edges[i][1]);
+            adj[edges[i][1]].add(edges[i][0]);
+        }
+        return dijkstra(n, adj,source,destination)>=0;
+    }
+
+ */
