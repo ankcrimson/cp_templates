@@ -1,3 +1,6 @@
+
+
+```java
 import java.util.*;
 import java.util.stream.Collectors;
 public class DijkstraPQ {
@@ -52,7 +55,11 @@ public class DijkstraPQ {
 
     }
 }
-/*
+```
+
+Slow, todo optimize for adding nodes while calculating next batch, see last soln
+
+```java
 
 int dijkstra(int n, Set<Integer>[] adj,int start, int end){
         // System.out.println(start+","+end);
@@ -89,4 +96,116 @@ int dijkstra(int n, Set<Integer>[] adj,int start, int end){
         return dijkstra(n, adj,source,destination)>=0;
     }
 
- */
+ ```
+
+ ### Faster with optimization
+
+```java
+class Graph {
+    List<int[]>[] adj=new List[101];
+    boolean filled = false;
+    int n=0;
+    
+    public Graph(int n, int[][] edges) {
+        this.n=n;
+        for(int i=0;i<adj.length;i++){
+            adj[i]=new LinkedList<>();
+        }
+        for(int[] edge:edges){
+            adj[edge[0]].add(new int[]{edge[1],edge[2]});
+        }
+    }
+    
+    public void addEdge(int[] edge) {
+        adj[edge[0]].add(new int[]{edge[1],edge[2]});
+        if(edge[0]>=n||edge[1]>=n){
+            n=Math.max(edge[0],edge[1])+1;
+        }
+        filled = false;
+    }
+    
+    public int shortestPath(int node1, int node2) {
+        if(node1==node2){return 0;}
+        return dijkstra(n, adj,node1,node2);
+    }
+
+    int dijkstra(int n, List<int[]>[] adj, int n1, int n2){
+        int[] psum=new int[n];
+        Arrays.fill(psum,-1);
+        psum[n1]=0;
+        PriorityQueue<int[]> pq = new PriorityQueue<>(Comparator.comparing(x -> x[1])); //node,dist
+        pq.offer(new int[]{n1,0});
+        while(!pq.isEmpty()){
+            int[] c=pq.poll();
+            int cn=c[0], cw=c[1];
+            if(psum[cn]!=cw){continue;}//as cw has min wt
+            //problem specific, 
+            if(cn==n2){return cw;}
+            for(int[] next:adj[cn]){
+                if(psum[next[0]]==-1||next[1]+cw<psum[next[0]]){
+                    psum[next[0]]=next[1]+cw;
+                    pq.offer(new int[]{next[0],psum[next[0]]});
+                }
+            }
+        }
+        return -1;
+    }
+}
+ 
+
+```
+
+
+```java
+class Graph {
+    List<int[]>[] adj=new List[101];
+    int[][] dp = new int[101][101];
+    boolean[] filled = new boolean[101];
+    int n=0;
+    
+    public Graph(int n, int[][] edges) {
+        this.n=n;
+        for(int i=0;i<adj.length;i++){
+            adj[i]=new LinkedList<>();
+        }
+        for(int[] edge:edges){
+            adj[edge[0]].add(new int[]{edge[1],edge[2]});
+        }
+    }
+    
+    public void addEdge(int[] edge) {
+        adj[edge[0]].add(new int[]{edge[1],edge[2]});
+        dp=new int[101][101];
+        filled = new boolean[101];
+    }
+    
+    public int shortestPath(int node1, int node2) {
+        if(node1==node2){return 0;}
+        if(filled[node1]){return dp[node1][node2];}
+        dp[node1]=dijkstra(adj,node1,node2);
+        filled[node1]=true;
+        return dp[node1][node2];
+    }
+
+    int[] dijkstra(List<int[]>[] adj, int n1, int n2){
+        int[] psum=new int[101];
+        Arrays.fill(psum,-1);
+        psum[n1]=0;
+        PriorityQueue<int[]> pq = new PriorityQueue<>(Comparator.comparing(x -> x[1])); //node,dist
+        pq.offer(new int[]{n1,0});
+        while(!pq.isEmpty()){
+            int[] c=pq.poll();
+            int cn=c[0], cw=c[1];
+            if(psum[cn]!=cw){continue;}//as cw has min wt
+            for(int[] next:adj[cn]){
+                if(psum[next[0]]==-1||next[1]+cw<psum[next[0]]){
+                    psum[next[0]]=next[1]+cw;
+                    pq.offer(new int[]{next[0],psum[next[0]]});
+                }
+            }
+        }
+        return psum;
+    }
+}
+
+```
